@@ -1,17 +1,15 @@
 package com.tencent.wxcloudrun.controller;
 
 import com.tencent.wxcloudrun.config.ApiResponse;
-import com.tencent.wxcloudrun.dto.CounterRequest;
-import com.tencent.wxcloudrun.model.Counter;
-import com.tencent.wxcloudrun.service.CounterService;
+import com.tencent.wxcloudrun.dto.LoginDto;
 import com.tencent.wxcloudrun.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * counter控制器
@@ -21,18 +19,25 @@ import java.util.Optional;
 @RequestMapping("/api/sys")
 public class SysController {
 
-  @Autowired
-  private UserService userService;
+	@Autowired
+	private UserService userService;
 
 
-  /**
-   * 获取当前计数
-   * @return API response json
-   */
-  @GetMapping(value = "/login")
-  ApiResponse login() {
-    userService.login("wxn", "wxn");
-    return ApiResponse.ok();
-  }
-  
+	/**
+	 * 获取当前计数
+	 *
+	 * @return API response json
+	 */
+	@PostMapping(value = "/login")
+	ApiResponse login(@RequestBody LoginDto loginDto) {
+		if (StringUtils.isBlank(loginDto.getUsername())) {
+			return ApiResponse.error("用户名为空");
+		}
+		try {
+			userService.login(loginDto.getUsername(), loginDto.getPassword());
+			return ApiResponse.ok();
+		} catch (Exception e) {
+			return ApiResponse.error(e.getMessage());
+		}
+	}
 }
