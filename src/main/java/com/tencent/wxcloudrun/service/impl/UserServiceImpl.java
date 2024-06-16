@@ -1,5 +1,6 @@
 package com.tencent.wxcloudrun.service.impl;
 
+import com.tencent.wxcloudrun.UserVO;
 import com.tencent.wxcloudrun.dao.CountersMapper;
 import com.tencent.wxcloudrun.dao.UserMapper;
 import com.tencent.wxcloudrun.model.Counter;
@@ -7,6 +8,7 @@ import com.tencent.wxcloudrun.model.User;
 import com.tencent.wxcloudrun.service.CounterService;
 import com.tencent.wxcloudrun.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
 
   @Override
-  public void login(String username, String password) {
+  public UserVO login(String username, String password) {
     User user = userMapper.getUserByUsername(username);
     if (user == null) {
       throw new RuntimeException("该用户不存在");
@@ -30,5 +32,8 @@ public class UserServiceImpl implements UserService {
       throw new RuntimeException("密码错误");
     }
     log.info("登录成功");
+    UserVO userVO = new UserVO();
+    BeanUtils.copyProperties(user,userVO);
+    return userVO;
   }
 }

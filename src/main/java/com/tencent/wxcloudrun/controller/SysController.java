@@ -34,8 +34,7 @@ public class SysController {
 			return ApiResponse.error("用户名为空");
 		}
 		try {
-			userService.login(loginDto.getUsername(), loginDto.getPassword());
-			return ApiResponse.ok();
+			return ApiResponse.ok(userService.login(loginDto.getUsername(), loginDto.getPassword()));
 		} catch (Exception e) {
 			return ApiResponse.error(e.getMessage());
 		}
