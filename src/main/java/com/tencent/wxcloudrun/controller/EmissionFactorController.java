@@ -26,6 +26,8 @@ public class EmissionFactorController {
 	 */
 	@GetMapping(value = "/emissionFactorListByCategory")
 	ApiResponse getEmissionFactorListByCategory(@RequestParam(required = false) String category) {
+		log.info("========getEmissionFactorListByCategory========");
+		log.info("category=" + category);
 		return ApiResponse.ok(emissionFactorService.getEmissionFactorListByCategory(category));
 	}
 
